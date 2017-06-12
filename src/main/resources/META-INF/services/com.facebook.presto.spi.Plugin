@@ -1,1 +1,1 @@
-com.facebook.presto.google.s2.functions.GoogleS2FunctionsPlugin
+com.facebook.presto.s2.geometry.functions.S2GeometryFunctionsPlugin

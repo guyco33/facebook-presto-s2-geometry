@@ -1,4 +1,4 @@
-package com.facebook.presto.google.s2.functions;
+package com.facebook.presto.s2.geometry.functions;
 
 /**
  * Created by guycohen on 18/05/2017.
@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import static io.airlift.slice.Slices.utf8Slice;
 import static java.lang.Math.toIntExact;
 
-public class GoogleS2Functions {
+public class S2GeometryFunctions {
 
 
-    private GoogleS2Functions() {}
+    private S2GeometryFunctions() {}
 
     @ScalarFunction("s2_cell")
     @Description("Returns cell token for latitude,longitude degrees and level")
