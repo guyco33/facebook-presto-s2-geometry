@@ -32,7 +32,7 @@ public class S2Helper {
             String[] items = Pattern.compile(ospaces+","+ospaces).split(polygon.replace("POLYGON((","").replace("))",""));
             for (String item: items) {
                 String[] nums = item.trim().split(spaces);
-                points.add(S2LatLng.fromDegrees(Double.parseDouble(nums[0]), Double.parseDouble(nums[1])).toPoint());
+                points.add(S2LatLng.fromDegrees(Double.parseDouble(nums[1]), Double.parseDouble(nums[0])).toPoint());
             }
             S2Loop loop = new S2Loop(points);
             S2PolygonBuilder polyBuilder = new S2PolygonBuilder();
