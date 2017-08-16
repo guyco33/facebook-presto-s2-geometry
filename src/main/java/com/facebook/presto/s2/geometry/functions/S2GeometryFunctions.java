@@ -85,6 +85,21 @@ public class S2GeometryFunctions {
     }
 
 
+    @ScalarFunction("s2_centroid")
+    @Description("Returns the lat,lon point of cell centre")
+    @SqlType("array(double)")
+    @SqlNullable
+    public static Block s2_centroid(
+            @SqlType(StandardTypes.VARCHAR) Slice celltoken)
+    {
+        S2LatLng latlng = S2CellId.fromToken(celltoken.toStringUtf8()).toLatLng();
+        Slice[] slicePoint = new Slice[]{utf8Slice(Double.toString(latlng.latDegrees())),utf8Slice(Double.toString(latlng.lngDegrees()))};
+
+        return (new SliceArrayBlock(2, slicePoint,true));
+
+    }
+
+
     @ScalarFunction("s2_neighbours")
     @Description("Returns cell token neighbours in a level")
     @SqlType("array(varchar)")
