@@ -87,16 +87,16 @@ public class S2GeometryFunctions {
 
     @ScalarFunction("s2_centroid")
     @Description("Returns the lat,lon point of cell centre")
-    @SqlType("array(double)")
+    @SqlType("array(varchar)")
     @SqlNullable
     public static Block s2_centroid(
             @SqlType(StandardTypes.VARCHAR) Slice celltoken)
     {
         S2LatLng latlng = S2CellId.fromToken(celltoken.toStringUtf8()).toLatLng();
-        Slice[] slicePoint = new Slice[]{utf8Slice(Double.toString(latlng.latDegrees())),utf8Slice(Double.toString(latlng.lngDegrees()))};
+        Slice[] slicePoint = new Slice[]{ utf8Slice(Double.toString(latlng.latDegrees())),
+                                          utf8Slice(Double.toString(latlng.lngDegrees())) };
 
-        return (new SliceArrayBlock(2, slicePoint,true));
-
+        return new SliceArrayBlock(slicePoint.length, slicePoint,true);
     }
 
 
