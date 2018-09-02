@@ -19,6 +19,9 @@ import java.util.ArrayList;
 
 
 import static com.facebook.presto.s2.geometry.functions.S2Helper.parseWktPolygon;
+import static com.facebook.presto.spi.type.VarcharType.VARCHAR;
+import static com.facebook.presto.spi.type.DoubleType.DOUBLE;
+
 import static io.airlift.slice.Slices.utf8Slice;
 import static java.lang.Math.toIntExact;
 
@@ -84,21 +87,22 @@ public class S2GeometryFunctions {
         return S2CellId.fromToken(celltoken.toStringUtf8()).toLatLng().getEarthDistance(S2LatLng.fromDegrees(lat,lon));
     }
 
-
     @ScalarFunction("s2_centroid")
     @Description("Returns the lat,lon point of cell centre")
-    @SqlType("array(varchar)")
+    @SqlType("array(double)")
     @SqlNullable
     public static Block s2_centroid(
             @SqlType(StandardTypes.VARCHAR) Slice celltoken)
     {
         S2LatLng latlng = S2CellId.fromToken(celltoken.toStringUtf8()).toLatLng();
-        Slice[] slicePoint = new Slice[]{ utf8Slice(Double.toString(latlng.latDegrees())),
-                                          utf8Slice(Double.toString(latlng.lngDegrees())) };
-
-        return new SliceArrayBlock(slicePoint.length, slicePoint,true);
+//        Slice[] slicePoint = new Slice[]{ utf8Slice(Double.toString(latlng.latDegrees())),
+//                                          utf8Slice(Double.toString(latlng.lngDegrees())) };
+        BlockBuilder blockBuilder = DOUBLE.createBlockBuilder(null,2);
+        DOUBLE.writeDouble(blockBuilder, latlng.latDegrees());
+        DOUBLE.writeDouble(blockBuilder, latlng.lngDegrees());
+        return blockBuilder.build();
+        //return new SliceArrayBlock(slicePoint.length, slicePoint,true);
     }
-
 
     @ScalarFunction("s2_neighbours")
     @Description("Returns cell token neighbours in a level")
@@ -114,6 +118,17 @@ public class S2GeometryFunctions {
         S2CellId cellid = S2CellId.fromToken(celltoken.toStringUtf8());
         cellid.getAllNeighbors(toIntExact(level), output);
         return cellsArrayBlock(output);
+    }
+
+    @ScalarFunction("s2_neighbors")
+    @Description("Returns cell token neighbors in a level")
+    @SqlType("array(varchar)")
+    @SqlNullable
+    public static Block s2CellNeighbors(
+            @SqlType(StandardTypes.VARCHAR) Slice celltoken,
+            @SqlType(StandardTypes.INTEGER) long level)
+    {
+        return s2CellNeighbours(celltoken, level);
     }
 
     @ScalarFunction("s2_childs")
@@ -155,7 +170,6 @@ public class S2GeometryFunctions {
         return utf8Slice(S2Helper.parseWktPolygon(wktPolygon.toStringUtf8()).toString());
     }
 
-
     @ScalarFunction("s2_polygon_cover")
     @Description("Returns cell tokens cover of wkt polygon")
     @SqlType("array(varchar)")
@@ -186,7 +200,6 @@ public class S2GeometryFunctions {
         return s2PolygonCover(wktPolygon,level,level);
     }
 
-
     @ScalarFunction("s2_within")
     @Description("Returns TRUE if a cell token is in coverage of a wkt polygon")
     @SqlType(StandardTypes.BOOLEAN)
@@ -216,7 +229,6 @@ public class S2GeometryFunctions {
     {
         return s2Within(cellToken, wktPolygon, level);
     }
-
 
     @ScalarFunction("s2_within")
     @Description("Returns TRUE if a cell token is in coverage of cells list")
@@ -249,7 +261,6 @@ public class S2GeometryFunctions {
         return s2Within(cellToken, cellTokens);
     }
 
-
     @ScalarFunction("s2_within")
     @Description("Returns TRUE if a cell token A is in coverage of cell token B")
     @SqlType(StandardTypes.BOOLEAN)
@@ -274,13 +285,12 @@ public class S2GeometryFunctions {
     }
 
     public static Block cellsArrayBlock(List<S2CellId> cells) {
-        Slice[] slices = new Slice[cells.size()];
-        for (int i = 0; i < cells.size(); i++)
-            slices[i] = utf8Slice(cells.get(i).toToken());
+        BlockBuilder blockBuilder = VARCHAR.createBlockBuilder(null, cells.size(), 16);
+        for (S2CellId cell: cells)
+            VARCHAR.writeSlice(blockBuilder, utf8Slice(cell.toToken()));
+        return blockBuilder.build();
 
-        return (new SliceArrayBlock(slices.length, slices,true));
     }
-
 
 
 }

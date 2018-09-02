@@ -16,7 +16,6 @@ public class S2GeometryFunctionsPlugin
     {
         return ImmutableSet.<Class<?>>builder()
                 .add(S2GeometryFunctions.class)
-                .add(StatsFunctions.class)
                 .build();
     }
 }

@@ -21,12 +21,9 @@ public class S2Helper {
         String ospaces = "(\\s)*";
         String point = ospaces+coord+spaces+coord+ospaces;
 
-        //Pattern pattern = Pattern.compile("POLYGON[(][(]("+number+","+number+"){3,}?[)][)]");
         String pattern = "POLYGON[(][(]"+point+"(,"+point+"){2,}?[)][)]";
-        System.out.println(pattern);
         polygon = polygon.toUpperCase();
         Boolean match = Pattern.matches(pattern, polygon);
-        System.out.println(match);
         if (match) {
             ArrayList<S2Point> points = new ArrayList<S2Point>();
             String[] items = Pattern.compile(ospaces+","+ospaces).split(polygon.replace("POLYGON((","").replace("))",""));
