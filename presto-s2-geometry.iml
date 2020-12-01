@@ -13,9 +13,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="io.airlift:slice:0.9" level="project" />
     <orderEntry type="library" name="com.facebook.presto:presto-spi:0.175" level="project" />
-    <orderEntry type="library" exported="" name="com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" exported="" name="org.isuper:s2-geometry-library-java:0.0.1" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:29.0-jre" level="project" />    
     <orderEntry type="library" name="Maven: org.isuper:s2-geometry-library-java:0.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.facebook.presto:presto-main:0.182" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: it.unimi.dsi:fastutil:6.5.9" level="project" />
